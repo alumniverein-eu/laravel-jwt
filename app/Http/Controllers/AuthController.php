@@ -11,6 +11,13 @@ use Auth;
 class AuthController extends Controller
 {
 
+  /**
+    * Register a new user.
+    *
+    * @var RegisterFormRequest $request
+    *
+    * @return response
+    */
   public function register(RegisterFormRequest $request)
   {
     $user = new User;
@@ -24,6 +31,13 @@ class AuthController extends Controller
        ], 200);
   }
 
+  /**
+    * Login attempt
+    *
+    * @var Request $request
+    *
+    * @return response
+    */
   public function login(Request $request)
   {
       $credentials = $request->only('email', 'password');
@@ -40,6 +54,13 @@ class AuthController extends Controller
           ]);
   }
 
+  /**
+    * Return data of the current logged-in user
+    *
+    * @var Request $request
+    *
+    * @return response
+    */
   public function user(Request $request)
   {
       $user = User::find(Auth::user()->id);
@@ -49,6 +70,11 @@ class AuthController extends Controller
           ]);
   }
 
+  /**
+    * Logout the current user
+    *
+    * @return response
+    */
   public function logout()
   {
       JWTAuth::invalidate();
@@ -58,6 +84,11 @@ class AuthController extends Controller
           ], 200);
   }
 
+  /**
+    * Login attempt
+    *
+    * @return response
+    */
   public function refresh()
   {
       return response([
