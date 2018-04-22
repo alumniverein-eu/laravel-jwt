@@ -18,12 +18,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::post('signup', 'AuthController@register');
-Route::post('login', 'AuthController@login');
+//Route::post('signup', 'Api\UserController@store');
+Route::post('login', 'Api\Auth\AuthController@login');
 
 Route::group(['middleware' => 'jwt.auth'], function(){
   Route::get('auth/user', 'AuthController@user');
-  Route::post('auth/logout', 'AuthController@logout');
+  Route::post('auth/logout', 'Api\Auth\AuthController@logout');
+  Route::post('auth/refresh', 'Api\Auth\AuthController@refresh');
 });
 
-Route::middleware('jwt.refresh')->get('/token/refresh', 'AuthController@refresh');
+//Route::middleware('jwt.refresh')->get('/auth/refresh', 'Api\Auth\AuthController@refresh');
