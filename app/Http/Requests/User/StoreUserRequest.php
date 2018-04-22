@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterFormRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,19 +27,6 @@ class RegisterFormRequest extends FormRequest
             'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:10',
-        ];
-    }
-
-    /**
-     * Get the validation messages.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'name.required'    => 'Well .. A name is required.',
-            'name.unique'    => 'Name is already in use.',
         ];
     }
 }
