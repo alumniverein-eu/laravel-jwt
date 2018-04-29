@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Api\User;
 
-use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+
+use App\Models\User;
+use App\Jobs\User\StoreUser;
+use App\Jobs\User\UpdateUser;
+use App\Jobs\User\DestroyUser;
+
 
 class UserController extends Controller
 {
@@ -19,7 +24,6 @@ class UserController extends Controller
     public function index()
     {
         return User::all();
-        //
     }
 
     /**
@@ -30,16 +34,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        var_dump($request->all());
-        $user = new User;
-        $user->email = $request->email;
-        $user->name = $request->name;
-        $user->password = bcrypt($request->password);
-        //$user->save();
-        return response([
-            'status' => 'success',
-            'data' => $user
-        ], 200);
+        dispatch(new StoreUser($request->all()));
+        return ['stored' => true];
     }
 
     /**
@@ -62,9 +58,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        var_dump($request->all());
-        $user->update($request->all());
-        return $user;
+        dispatch(new UpdateUser($user, $request->all()));
+        return ['updated' => true];
     }
 
     /**
@@ -75,6 +70,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        dispatch(new DestroyUser($user));
+        return ['destroyed' => true];
     }
 }
