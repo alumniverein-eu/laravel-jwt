@@ -26,6 +26,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
   Route::post('auth/refresh', 'Api\Auth\AuthController@refresh');
 
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
+  Route::resource('role', 'Api\Role\RoleController', ['except' => ['edit', 'create']]);
 });
 
 Route::post('signup', 'Api\User\UserController@store');

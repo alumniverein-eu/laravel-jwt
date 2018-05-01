@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api\User;
+namespace App\Http\Controllers\Api\Role;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -8,16 +9,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-use App\Http\Requests\User\StoreUserRequest;
-use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Requests\Role\StoreRoleRequest;
+use App\Http\Requests\Role\UpdateRoleRequest;
 
-use App\Models\User;
-use App\Jobs\User\StoreUser;
-use App\Jobs\User\UpdateUser;
-use App\Jobs\User\DestroyUser;
+use App\Models\Role;
+use App\Jobs\Role\StoreRole;
+use App\Jobs\Role\UpdateRole;
+use App\Jobs\Role\DestroyRole;
 
 
-class UserController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,13 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->can('index', User::class)) {
-          return response(User::all())
-                    ->setStatusCode(200);
-        } else {
-          return response('{"message:"}')
-                    ->setStatusCode(403);
-        }
+        return Role::all();
     }
 
     /**
@@ -41,10 +36,10 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreRoleRequest $request)
     {
-        if (Auth::user()->can('create', User::class)) {
-          dispatch(new StoreUser($request->all()));
+        if (Auth::user()->can('create', Role::class)) {
+          dispatch(new StoreRole($request->all()));
           return response(null)
                     ->setStatusCode(201);
         } else {
@@ -56,26 +51,26 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Role $role)
     {
-        return $user;
+        return $role;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        if (Auth::user()->can('update', $user)){
-          dispatch(new UpdateUser($user, $request->all()));
-          return response(User::find($user->id))
+        if (Auth::user()->can('update', $role)){
+          dispatch(new UpdateRole($role, $request->all()));
+          return response(Role::find($role->id))
                     ->setStatusCode(202);
         } else {
           return response(null)
@@ -86,13 +81,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Role $role)
     {
-        if (Auth::user()->can('delete', $user)){
-          dispatch(new DestroyUser($user));
+        if (Auth::user()->can('delete', $role)){
+          dispatch(new DestroyRole($role));
           return response(null)
                     ->setStatusCode(202);
         } else {
