@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
+
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -13,7 +16,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can('create', User::class);
     }
 
     /**

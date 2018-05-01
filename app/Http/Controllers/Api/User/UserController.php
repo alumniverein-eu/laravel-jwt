@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -23,7 +26,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        if (Auth::user()->can('index', User::class)) {
+          return response(User::all())
+                    ->setStatusCode(200);
+        } else {
+          return response('{"message:"}')
+                    ->setStatusCode(403);
+        }
     }
 
     /**
@@ -34,8 +43,14 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        dispatch(new StoreUser($request->all()));
-        return ['stored' => true];
+        if (Auth::user()->can('create', User::class)) {
+          dispatch(new StoreUser($request->all()));
+          return response(User::all())
+                    ->setStatusCode(201);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
@@ -58,8 +73,14 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        dispatch(new UpdateUser($user, $request->all()));
-        return ['updated' => true];
+        if (Auth::user()->can('update', $user)){
+          dispatch(new UpdateUser($user, $request->all()));
+          return response(User::find($user->id))
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
@@ -70,7 +91,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        dispatch(new DestroyUser($user));
-        return ['destroyed' => true];
+        if (Auth::user()->can('delete', $user)){
+          dispatch(new DestroyUser($user));
+          return response(null)
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 }

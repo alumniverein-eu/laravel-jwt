@@ -27,3 +27,5 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
 });
+
+Route::post('signup', 'Api\User\UserController@store');
