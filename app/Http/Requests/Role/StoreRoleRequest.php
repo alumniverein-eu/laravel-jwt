@@ -16,7 +16,7 @@ class StoreRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('admin-role', User::class);
+        return Auth::user()->can('create', Role::class);
     }
 
     /**
@@ -29,6 +29,7 @@ class StoreRoleRequest extends FormRequest
         return [
             'name' => 'required|string|unique:roles|min:3|max:24',
             'slug' => 'required|string|unique:roles|min:3|max:18',
+            'permissions' =>'json',
         ];
     }
 }

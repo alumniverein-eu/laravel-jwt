@@ -27,7 +27,13 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::all();
+        if (Auth::user()->can('index', Role::class)) {
+          return response(Role::all())
+                    ->setStatusCode(200);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
@@ -56,7 +62,13 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return $role;
+        if (Auth::user()->can('view', $role)) {
+          return response($role)
+                    ->setStatusCode(201);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**

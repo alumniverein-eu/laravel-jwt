@@ -17,7 +17,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;//Auth::user()->can('admin-role', User::class);
+        return Auth::user()->can('update', Role::class);
     }
 
     /**

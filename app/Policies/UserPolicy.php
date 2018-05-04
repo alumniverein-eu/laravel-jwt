@@ -11,7 +11,6 @@ class UserPolicy
 
     public function index(User $user)
     {
-        //if($user->hasAccess(['index-user']))
         return true;
     }
 
@@ -35,7 +34,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->hasAccess(['create-user', 'admin-user']);
+        return $user->hasAccess(['create-user', 'global-user']);
     }
 
     /**
@@ -47,7 +46,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if($user->hasAccess(['update-user', 'admin-user']) || $user->id == $model->id)
+        if($user->hasAccess(['update-user', 'global-user']) || $user->id == $model->id)
             return true;
         else
             return false;
@@ -62,6 +61,6 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->hasAccess(['delete-user', 'admin-user']);
+        return $user->hasAccess(['delete-user', 'global-user']);
     }
 }
