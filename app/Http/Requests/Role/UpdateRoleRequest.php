@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Role;
 
 use App\Models\Role;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('admin-role', User::class);
+        return true;//Auth::user()->can('admin-role', User::class);
     }
 
     /**
@@ -26,9 +27,10 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules()
     {
+        $role_id = $this->route()->parameter('role')->getKey();
         return [
-            'name' => 'string|unique:roles|min:3|max:24',
-            'slug' => 'string|unique:roles|min:3|max:18',
+            'name' => 'string|min:3|max:24|unique:roles,name,' . $role_id . ',id',
+            'slug' => 'string|min:3|max:18|unique:roles,slug,' . $role_id . ',id',
         ];
     }
 }

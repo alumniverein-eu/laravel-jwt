@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Roles;
+namespace App\Jobs\Role;
 
 use App\Models\Role;
 
