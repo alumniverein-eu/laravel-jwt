@@ -47,8 +47,10 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if($user->id == $model->id) return true;
-        return $user->hasAccess(['update-user', 'admin-user']);
+        if($user->hasAccess(['update-user', 'admin-user']) || $user->id == $model->id)
+            return true;
+        else
+            return false;
     }
 
     /**

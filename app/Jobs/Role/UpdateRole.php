@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Roles;
+namespace App\Jobs\Role;
 
 use App\Models\Role;
 
@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class StoreRole implements ShouldQueue
+class UpdateRole implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,9 +21,10 @@ class StoreRole implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Array $request)
+    public function __construct(Role $role, Array $request)
     {
         $this->request = $request;
+        $this->role = $role;
     }
 
     /**
@@ -31,8 +32,8 @@ class StoreRole implements ShouldQueue
      *
      * @return void
      */
-     public function handle(Role $role)
-     {
-         $this->role = $role->create($this->request);
-     }
+    public function handle()
+    {
+        $this->role->update($this->request);
+    }
 }
