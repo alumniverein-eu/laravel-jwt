@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Role;
 
-use App\Models\User;
+use App\Models\Role;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreUserRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +17,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('create', User::class);
+        return Auth::user()->can('update', Role::class);
     }
 
     /**
@@ -26,10 +27,10 @@ class StoreUserRequest extends FormRequest
      */
     public function rules()
     {
+        $role_id = $this->route()->parameter('role')->getKey();
         return [
-            'name' => 'required|string|unique:users|min:3',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:10',
+            'name' => 'string|min:3|max:24|unique:roles,name,' . $role_id . ',id',
+            'slug' => 'string|min:3|max:18|unique:roles,slug,' . $role_id . ',id',
         ];
     }
 }
