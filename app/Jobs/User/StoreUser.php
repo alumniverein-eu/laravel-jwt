@@ -3,8 +3,7 @@
 namespace App\Jobs\User;
 
 use App\Models\User;
-use Log;
-use Mail;
+use App\Jobs\Mail\User\SendSignupMail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -36,15 +35,6 @@ class StoreUser implements ShouldQueue
     public function handle(User $user)
     {
         $this->user = $user->create($this->request);
-
-        Log::info("New user: ".$user->name. "(".$user->email.")");
-        Mail::send('email.user.welcome', ['data'=>'data'], function ($message) {
-
-            $message->from('dev@alumniverein.eu', 'Dev Team');
-            $mail = $this->user->email;
-            $message->to($mail);
-
-        });
-        Log::info("Mail send!");
+        dispatch(new SendSignupMail($this->user));
     }
 }
