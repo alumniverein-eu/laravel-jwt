@@ -11,11 +11,15 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
+use App\Http\Requests\Role\UserAttachRoleRequest;
+use App\Http\Requests\Role\UserDetachRoleRequest;
 
 use App\Models\Role;
 use App\Jobs\Role\StoreRole;
 use App\Jobs\Role\UpdateRole;
 use App\Jobs\Role\DestroyRole;
+use App\Jobs\User\AttachRole;
+use App\Jobs\User\DetachRole;
 
 
 class RoleController extends Controller
@@ -107,4 +111,41 @@ class RoleController extends Controller
                     ->setStatusCode(403);
         }
     }
+
+    /**
+     * Associate a certain role to a user
+     *
+     * @param  \App\Requests\User\UserRoleRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function attachToUser(UserAttachRoleRequest $request)
+    {
+        if (Auth::user()->can('associate', Role::class)){
+          dispatch(new AttachRole(Auth::user(), $request->all()));
+          return response(null)
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
+    }
+
+    /**
+     * Dissociate a certain role from a user
+     *
+     * @param  \App\Requests\User\UserRoleRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function detachFromUser(UserDetachRoleRequest $request)
+    {
+        if (Auth::user()->can('associate', Role::class)){
+          dispatch(new DetachRole(Auth::user(), $request->all()));
+          return response(null)
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
+    }
+
 }
