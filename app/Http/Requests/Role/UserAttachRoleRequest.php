@@ -7,7 +7,7 @@ use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateRoleRequest extends FormRequest
+class UserAttachRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('update', Role::class);
+        return Auth::user()->can('manage', Role::class);
     }
 
     /**
@@ -26,11 +26,11 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules()
     {
-        $role_id = $this->route()->parameter('role')->getKey();
         return [
-            'name' => 'sometimes|string|min:3|max:24|unique:roles,name,' . $role_id . ',id',
-            'slug' => 'sometimes|string|min:3|max:18|unique:roles,slug,' . $role_id . ',id',
-            'permissions' => 'sometimes|json',
+            'user' => 'required|exists:users,id|unique:roles_users,user_id,NULL,id,role_id,'.$this->role,
+            'role' => 'required|exists:roles,id|unique:roles_users,role_id,NULL,id,user_id,'.$this->user,
+            'incepts' => 'sometimes|date_format:"Y-m-d H:i:s"',
+            'expires' => 'sometimes|date_format:"Y-m-d H:i:s"',
         ];
     }
 }

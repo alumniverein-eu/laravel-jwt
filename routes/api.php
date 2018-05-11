@@ -18,12 +18,21 @@ use Illuminate\Http\Request;
 // });
 
 Route::group(['middleware' => 'jwt.auth'], function(){
+  //auth routes
   Route::get('auth/user', 'AuthController@user');
   Route::post('auth/logout', 'Api\Auth\AuthController@logout');
   Route::post('auth/refresh', 'Api\Auth\AuthController@refresh');
 
+  //user routes
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
+
+  //role routes
   Route::resource('role', 'Api\Role\RoleController', ['except' => ['edit', 'create']]);
+  Route::group(['prefix' => 'role'], function (){
+      Route::post('attach', 'Api\Role\RoleController@attachToUser');
+      Route::post('detach', 'Api\Role\RoleController@detachFromUser');
+  });
+
 });
 
 //routes without jwt
