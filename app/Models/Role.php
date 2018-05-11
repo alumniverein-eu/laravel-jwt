@@ -16,7 +16,7 @@ class Role extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'role_users');
+        return $this->belongsToMany(User::class, 'roles_users')->withPivot('incepts_at', 'expires_at');
     }
 
     public function hasAccess(array $permissions) : bool
