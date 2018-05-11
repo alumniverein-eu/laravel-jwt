@@ -2,10 +2,15 @@
 
 namespace App\Http\Requests\Role;
 
+<<<<<<< HEAD
 use App\Models\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+=======
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+>>>>>>> ebfff5f27486d8972890dfdbcc1114f9fd64bd55
 
 class UserDetachRoleRequest extends FormRequest
 {
@@ -16,7 +21,11 @@ class UserDetachRoleRequest extends FormRequest
      */
     public function authorize()
     {
+<<<<<<< HEAD
         return Auth::user()->can('manage', Role::class);
+=======
+        return true;
+>>>>>>> ebfff5f27486d8972890dfdbcc1114f9fd64bd55
     }
 
     /**

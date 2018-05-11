@@ -78,7 +78,11 @@ class RolePolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
+<<<<<<< HEAD
     public function manage(User $user)
+=======
+    public function associate(User $user)
+>>>>>>> ebfff5f27486d8972890dfdbcc1114f9fd64bd55
     {
         return $user->hasAccess(['global-role']);
     }
