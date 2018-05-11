@@ -16,11 +16,11 @@ class CreateMembershipsTable extends Migration
         Schema::create('memberships', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();
-            $table->float('amount', 8, 2);
-            $table->enum('project', ['europe', 'weimar', 'epd', 'none']);
-            $table->date('start_at');
-            $table->date('end_at');
-            $table->char('end_reason', 200);
+            $table->float('amount', 8, 2)->nullable();
+            $table->enum('project', ['europe', 'weimar', 'epd', 'none'])->default('none');
+            $table->date('start_at')->nullable();
+            $table->date('end_at')->nullable();
+            $table->char('end_reason', 200)->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

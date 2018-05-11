@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use User;
+
 class Membership extends Model
 {
     protected $fillable = [

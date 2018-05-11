@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\Membership;
 
-use App\Models\Membership;
-
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
+use App\Models\Membership;
 
 class MembershipController extends Controller
 {
@@ -16,17 +19,13 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        if (Auth::user()->can('index', Membership::class)) {
+          return response(Membership::all())
+                    ->setStatusCode(200);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
@@ -37,36 +36,38 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->can('create', Membership::class)) {
+          //dispatch(new StoreRole($request->all()));
+          return response(null)
+                    ->setStatusCode(201);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Models\Membership $membership
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Membership $membership)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (Auth::user()->can('view', $membership)) {
+          return response($membership)
+                    ->setStatusCode(201);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  App\Models\Membership
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
