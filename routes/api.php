@@ -24,6 +24,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
   Route::resource('role', 'Api\Role\RoleController', ['except' => ['edit', 'create']]);
+  Route::resource('membership', 'Api\Membership\MembershipController', ['except' => ['edit', 'create']]);
 });
 
 //routes without jwt

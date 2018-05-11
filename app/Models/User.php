@@ -33,6 +33,11 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($pass);
     }
 
+    public function membership()
+    {
+        return $this->hasOne(Membership::class, 'user_id');
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_users');
