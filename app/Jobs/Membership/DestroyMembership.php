@@ -2,6 +2,8 @@
 
 namespace App\Jobs\Membership;
 
+use App\Models\Membership;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,14 +14,16 @@ class DestroyMembership implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $membership;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Membership $membership)
     {
-        //
+        $this->membership = $membership;
     }
 
     /**
@@ -29,6 +33,6 @@ class DestroyMembership implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $this->membership->delete();
     }
 }

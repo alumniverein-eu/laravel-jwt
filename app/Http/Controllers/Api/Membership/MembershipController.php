@@ -96,8 +96,15 @@ class MembershipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Membership $membership)
     {
-        //
+        if (Auth::user()->can('delete', $membership)){
+          dispatch(new DestroyMembership($membership));
+          return response(null)
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 }

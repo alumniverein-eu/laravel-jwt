@@ -12,6 +12,9 @@ class StaticPermissions
        App\Models\Role::class => [
            'global-role'   => 'Full permissions on roles',
        ],
+       App\Models\Membership::class => [
+           'global-membership'   => 'Full permissions on membership',
+       ],
     ];
 
     public static function getPermissionsOnModel($model)

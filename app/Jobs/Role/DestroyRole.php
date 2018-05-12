@@ -14,6 +14,8 @@ class DestroyRole implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $role;
+    
     /**
      * Create a new job instance.
      *
@@ -21,7 +23,7 @@ class DestroyRole implements ShouldQueue
      */
     public function __construct(Role $role)
     {
-        $this->user = $role;
+        $this->role = $role;
     }
 
     /**
