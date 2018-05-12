@@ -8,7 +8,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
+use App\Http\Requests\Membership\StoreMembershipRequest;
+use App\Http\Requests\Membership\UpdateMembershipRequest;
+
 use App\Models\Membership;
+use App\Jobs\Membership\StoreMembership;
+use App\Jobs\Membership\UpdateMembership;
+use App\Jobs\Membership\DestroyMembership;
+
 
 class MembershipController extends Controller
 {
@@ -34,10 +41,11 @@ class MembershipController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreMembershipRequest $request)
     {
-        if (Auth::user()->can('create', Membership::class)) {
-          //dispatch(new StoreRole($request->all()));
+        if (Auth::user()->can('create', Membership::class)
+          || Auth::user()->id == $request->user_id) {
+          dispatch(new StoreMembership($request->all()));
           return response(null)
                     ->setStatusCode(201);
         } else {
@@ -49,7 +57,7 @@ class MembershipController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  App\Models\Membership $membership
+     * @param  App\Models\Membership  $membership
      * @return \Illuminate\Http\Response
      */
     public function show(Membership $membership)
@@ -70,9 +78,16 @@ class MembershipController extends Controller
      * @param  App\Models\Membership
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateMembershipRequest $request, Membership $membership)
     {
-        //
+        if (Auth::user()->can('update', $membership)){
+          dispatch(new UpdateMembership($membership, $request->all()));
+          return response(Membership::find($membership->id))
+                    ->setStatusCode(202);
+        } else {
+          return response(null)
+                    ->setStatusCode(403);
+        }
     }
 
     /**

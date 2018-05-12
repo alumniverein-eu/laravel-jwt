@@ -31,7 +31,7 @@ class MembershipPolicy
     public function view(User $user, Membership $membership)
     {
         //user can only see their own membership unless they hold global permissions on Membership
-        if($user->hasAccess(['global-membership']) || $user->membership() == $membership){
+        if($user->hasAccess(['global-membership']) || $user->id == $membership->user_id){
             return true;
         }
         return false;
@@ -55,9 +55,12 @@ class MembershipPolicy
      * @param  \App\Models\Membership $membership
      * @return mixed
      */
-    public function update(User $user)
+    public function update(User $user, Membership $model)
     {
-        return $user->hasAccess(['global-membership']);
+        if($user->hasAccess(['update-membership', 'global-membership']) || $user->id == $model->user_id)
+            return true;
+        else
+            return false;
     }
 
     /**
