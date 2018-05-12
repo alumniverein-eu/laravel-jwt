@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Membership;
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -31,6 +33,11 @@ class User extends Authenticatable
     {
         //$this->attributes['password'] = Hash::make($pass);
         $this->attributes['password'] = bcrypt($pass);
+    }
+
+    public function membership()
+    {
+        return $this->hasOne(Membership::class, 'user_id');
     }
 
     public function roles()
