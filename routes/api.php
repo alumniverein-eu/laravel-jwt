@@ -33,8 +33,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
       Route::post('detach', 'Api\Role\RoleController@detachFromUser');
   });
 
-  //membership routes
-  Route::resource('membership', 'Api\Membership\MembershipController', ['except' => ['edit', 'create']]);
 });
 
 //routes without jwt
