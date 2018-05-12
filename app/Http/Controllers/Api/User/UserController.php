@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Config;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -16,7 +17,6 @@ use App\Jobs\User\StoreUser;
 use App\Jobs\User\UpdateUser;
 use App\Jobs\User\DestroyUser;
 
-
 class UserController extends Controller
 {
     /**
@@ -24,10 +24,12 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::user()->can('index', User::class)) {
-          return response(User::all())
+          $response = User::paginate(Config::get('pagination.itemsPerPage'))
+                        ->appends('paged', $request->input('paged'));
+          return response($response)
                     ->setStatusCode(200);
         } else {
           return response('{"message:"}')

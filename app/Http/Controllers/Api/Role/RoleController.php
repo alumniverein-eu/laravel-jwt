@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Config;
 
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
@@ -29,10 +30,12 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::user()->can('index', Role::class)) {
-          return response(Role::all())
+          $response = Role::paginate(Config::get('pagination.itemsPerPage'))
+                        ->appends('paged', $request->input('paged'));
+          return response($response)
                     ->setStatusCode(200);
         } else {
           return response(null)
