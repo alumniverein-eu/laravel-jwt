@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Role;
+namespace App\Jobs\Membership;
 
-use App\Models\Role;
+use App\Models\Membership;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -10,20 +10,20 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class DestroyRole implements ShouldQueue
+class DestroyMembership implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $role;
-    
+    protected $membership;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Role $role)
+    public function __construct(Membership $membership)
     {
-        $this->role = $role;
+        $this->membership = $membership;
     }
 
     /**
@@ -33,6 +33,6 @@ class DestroyRole implements ShouldQueue
      */
     public function handle()
     {
-        $this->role->delete();
+        $this->membership->delete();
     }
 }

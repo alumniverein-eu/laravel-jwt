@@ -12,6 +12,9 @@ use App\Policies\UserPolicy;
 use App\Models\Role;
 use App\Policies\RolePolicy;
 
+use App\Models\Membership;
+use App\Policies\MembershipPolicy;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Role::class => RolePolicy::class,
+        Membership::class => MembershipPolicy::class,
     ];
 
     /**
