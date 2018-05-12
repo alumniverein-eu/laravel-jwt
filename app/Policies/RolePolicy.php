@@ -71,4 +71,15 @@ class RolePolicy
     {
         return $user->hasAccess(['global-role']);
     }
+
+    /**
+     * Determine whether the user can associate a role.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function manage(User $user)
+    {
+        return $user->hasAccess(['global-role']);
+    }
 }

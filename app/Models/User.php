@@ -42,7 +42,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_users');
+        return $this->belongsToMany(Role::class, 'roles_users')->withPivot('incepts_at', 'expires_at');
     }
 
     /**
