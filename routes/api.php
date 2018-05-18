@@ -19,9 +19,10 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => 'jwt.auth'], function(){
   //auth routes
-  Route::get('auth/user', 'AuthController@user');
+  Route::get('auth/user', 'Api\Auth\AuthController@user');
   Route::post('auth/logout', 'Api\Auth\AuthController@logout');
-  Route::post('auth/refresh', 'Api\Auth\AuthController@refresh');
+  Route::get('auth/check', 'Api\Auth\AuthController@check');
+  //Route::post('auth/refresh', 'Api\Auth\AuthController@refresh');
 
   //user routes
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
@@ -33,8 +34,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
       Route::post('detach', 'Api\Role\RoleController@detachFromUser');
   });
 
+  //membership routes
+  Route::resource('membership', 'Api\Membership\MembershipController', ['except' => ['edit', 'create']]);
+
 });
 
 //routes without jwt
 Route::post('login',  'Api\Auth\AuthController@login');
 Route::post('signup', 'Api\Auth\AuthController@signup');
+Route::post('sgnp/checkname', 'Api\Auth\AuthController@checkName');
+Route::post('sgnp/checkmail', 'Api\Auth\AuthController@checkMail');

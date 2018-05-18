@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Config;
 
 use App\Http\Requests\Membership\StoreMembershipRequest;
 use App\Http\Requests\Membership\UpdateMembershipRequest;
@@ -24,10 +25,12 @@ class MembershipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::user()->can('index', Membership::class)) {
-          return response(Membership::all())
+          $response = Membership::paginate(Config::get('pagination.itemsPerPage'))
+                        ->appends('paged', $request->input('paged'));
+          return response($response)
                     ->setStatusCode(200);
         } else {
           return response(null)
