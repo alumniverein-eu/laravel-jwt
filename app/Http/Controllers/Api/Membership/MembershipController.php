@@ -28,13 +28,11 @@ class MembershipController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->can('index', Membership::class)) {
-          $response = Membership::paginate(Config::get('pagination.itemsPerPage'))
-                        ->appends('paged', $request->input('paged'));
-          return response($response)
-                    ->setStatusCode(200);
+            $response = Membership::paginate(Config::get('pagination.itemsPerPage'))
+                            ->appends('paged', $request->input('paged'));
+            return response($response, 200);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -46,14 +44,11 @@ class MembershipController extends Controller
      */
     public function store(StoreMembershipRequest $request)
     {
-        if (Auth::user()->can('create', Membership::class)
-          || Auth::user()->id == $request->user_id) {
-          dispatch(new StoreMembership($request->all()));
-          return response(null)
-                    ->setStatusCode(201);
+        if (Auth::user()->can('create', Membership::class) || Auth::user()->id == $request->user_id) {
+            dispatch(new StoreMembership($request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -66,11 +61,9 @@ class MembershipController extends Controller
     public function show(Membership $membership)
     {
         if (Auth::user()->can('view', $membership)) {
-          return response($membership)
-                    ->setStatusCode(201);
+            return response($membership, 200);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -84,12 +77,10 @@ class MembershipController extends Controller
     public function update(UpdateMembershipRequest $request, Membership $membership)
     {
         if (Auth::user()->can('update', $membership)){
-          dispatch(new UpdateMembership($membership, $request->all()));
-          return response(Membership::find($membership->id))
-                    ->setStatusCode(202);
+            dispatch(new UpdateMembership($membership, $request->all()));
+            return response(Membership::find($membership->id), 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -102,12 +93,10 @@ class MembershipController extends Controller
     public function destroy(Membership $membership)
     {
         if (Auth::user()->can('delete', $membership)){
-          dispatch(new DestroyMembership($membership));
-          return response(null)
-                    ->setStatusCode(202);
+            dispatch(new DestroyMembership($membership));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 }

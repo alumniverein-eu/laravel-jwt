@@ -27,13 +27,11 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->can('index', User::class)) {
-          $response = User::paginate(Config::get('pagination.itemsPerPage'))
-                        ->appends('paged', $request->input('paged'));
-          return response($response)
-                    ->setStatusCode(200);
+            $response = User::paginate(Config::get('pagination.itemsPerPage'))
+                                ->appends('paged', $request->input('paged'));
+            return response($response, 200);
         } else {
-          return response('{"message:"}')
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -46,12 +44,10 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         if (Auth::user()->can('create', User::class)) {
-          dispatch(new StoreUser($request->all()));
-          return response(null)
-                    ->setStatusCode(201);
+            dispatch(new StoreUser($request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -63,7 +59,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+        return response($user, 200);
     }
 
     /**
@@ -76,12 +72,10 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         if (Auth::user()->can('update', $user)){
-          dispatch(new UpdateUser($user, $request->all()));
-          return response(User::find($user->id))
-                    ->setStatusCode(202);
+            dispatch(new UpdateUser($user, $request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -94,12 +88,10 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if (Auth::user()->can('delete', $user)){
-          dispatch(new DestroyUser($user));
-          return response(null)
-                    ->setStatusCode(202);
+            dispatch(new DestroyUser($user));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+          return response(NULL, 401);
         }
     }
 }

@@ -42,5 +42,5 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 //routes without jwt
 Route::post('login',  'Api\Auth\AuthController@login');
 Route::post('signup', 'Api\Auth\AuthController@signup');
-Route::post('sgnp/checkname', 'Api\Auth\AuthController@checkName');
-Route::post('sgnp/checkmail', 'Api\Auth\AuthController@checkMail');
+Route::post('sgnp/checkname', 'Api\AsyncValidation\AsyncValidationController@checkName');
+Route::post('sgnp/checkmail', 'Api\AsyncValidation\AsyncValidationController@checkMail');
