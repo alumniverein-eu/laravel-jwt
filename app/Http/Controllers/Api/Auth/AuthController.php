@@ -24,16 +24,11 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if ( ! $token = JWTAuth::attempt($credentials)) {
-            return response([
-                'status' => 'error',
-                'error' => 'credentials',
-                'msg' => 'Invalid Credentials.',
-            ], 401);
+            return response(['message'=>'Invalid Credentials'])
+                    ->setStatusCode(401);
         }
-        return response([
-            'status' => 'success',
-            'token' => $token
-        ]);
+        return response(['message'=>$token])
+                ->setStatusCode(200);
     }
 
     /**
@@ -43,11 +38,9 @@ class AuthController extends Controller
       */
     public function logout()
     {
-        JWTAuth::invalidate();
-        return response([
-                'status' => 'success',
-                'msg' => 'Logged out Successfully.'
-            ], 200);
+        $response = JWTAuth::invalidate();
+        return response(['message'=>$response])
+                ->setStatusCode(200);
     }
 
     /**
@@ -60,10 +53,8 @@ class AuthController extends Controller
         $token = JWTAuth::getToken();
         $newToken = JWTAuth::refresh($token);
 
-        return response([
-         'status' => 'success',
-         'token' => $newToken
-        ]);
+        return response($newToken)
+                  ->setStatusCode(200);
     }
 
     /**
@@ -75,12 +66,87 @@ class AuthController extends Controller
     public function signup(SignupUserRequest $request)
     {
         if (!JWTAuth::getToken()) { //Logged in user cannot perform this action
-          dispatch(new StoreUser($request->all()));
-          return response(null)
+            dispatch(new StoreUser($request->all()));
+            return response(null)
                     ->setStatusCode(201);
         } else {
-          return response(null)
+            return response(null)
                     ->setStatusCode(403);
+        }
+    }
+
+    /**
+      * Return data of the current logged-in user
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    public function user(Request $request)
+    {
+        $user = Auth::user();
+        return response($user)
+                ->setStatusCode(200);
+    }
+
+    /**
+      * Check
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    public function check(Request $request)
+    {
+        if(Auth::user()){
+            return response(null)
+                    ->setStatusCode(200);
+        } else {
+            return response(null)
+                    ->setStatusCode(401);
+        }
+
+    }
+
+    /**
+      * Check
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    public function checkName(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|unique:users|min:3'
+        ]);
+        if($validatedData){
+            return response(null)
+                    ->setStatusCode(200);
+        } else {
+            return response(null)
+                    ->setStatusCode(500);
+        }
+    }
+
+    /**
+      * Check
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    public function checkMail(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|email|unique:users'
+        ]);
+        if($validatedData){
+            return response(null)
+                    ->setStatusCode(200);
+        } else {
+            return response(null)
+                    ->setStatusCode(500);
         }
     }
 }
