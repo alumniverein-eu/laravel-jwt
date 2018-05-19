@@ -24,11 +24,9 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if ( ! $token = JWTAuth::attempt($credentials)) {
-            return response(['message'=>'Invalid Credentials'])
-                    ->setStatusCode(401);
+            return response(['message'=>'Invalid Credentials'], 401);
         }
-        return response(['message'=>$token])
-                ->setStatusCode(200);
+        return response($token, 200);
     }
 
     /**
@@ -39,12 +37,11 @@ class AuthController extends Controller
     public function logout()
     {
         $response = JWTAuth::invalidate();
-        return response(['message'=>$response])
-                ->setStatusCode(200);
+        return response($response, 200);
     }
 
     /**
-      * Login attempt
+      * Refresh attempt
       *
       * @return response
       */
@@ -53,8 +50,7 @@ class AuthController extends Controller
         $token = JWTAuth::getToken();
         $newToken = JWTAuth::refresh($token);
 
-        return response($newToken)
-                  ->setStatusCode(200);
+        return response($newToken, 200);
     }
 
     /**
@@ -67,11 +63,9 @@ class AuthController extends Controller
     {
         if (!JWTAuth::getToken()) { //Logged in user cannot perform this action
             dispatch(new StoreUser($request->all()));
-            return response(null)
-                    ->setStatusCode(201);
+            return response(NULL, 201);
         } else {
-            return response(null)
-                    ->setStatusCode(403);
+            return response(NULL,403);
         }
     }
 
@@ -84,9 +78,8 @@ class AuthController extends Controller
       */
     public function user(Request $request)
     {
-        $user = Auth::user();
-        return response($user)
-                ->setStatusCode(200);
+        $response = Auth::user();
+        return response($response, 200);
     }
 
     /**
@@ -99,54 +92,10 @@ class AuthController extends Controller
     public function check(Request $request)
     {
         if(Auth::user()){
-            return response(null)
-                    ->setStatusCode(200);
+            return response(NULL, 200);
         } else {
-            return response(null)
-                    ->setStatusCode(401);
+            return response(NULL, 401);
         }
 
-    }
-
-    /**
-      * Check
-      *
-      * @var Request $request
-      *
-      * @return response
-      */
-    public function checkName(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|unique:users|min:3'
-        ]);
-        if($validatedData){
-            return response(null)
-                    ->setStatusCode(200);
-        } else {
-            return response(null)
-                    ->setStatusCode(500);
-        }
-    }
-
-    /**
-      * Check
-      *
-      * @var Request $request
-      *
-      * @return response
-      */
-    public function checkMail(Request $request)
-    {
-        $validatedData = $request->validate([
-            'email' => 'required|email|unique:users'
-        ]);
-        if($validatedData){
-            return response(null)
-                    ->setStatusCode(200);
-        } else {
-            return response(null)
-                    ->setStatusCode(500);
-        }
     }
 }

@@ -26,10 +26,7 @@ class StoreUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|string|unique:users|min:3',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:10',
-        ];
+        $model = new User();
+        return $model->modelRules('store');
     }
 }

@@ -23,6 +23,6 @@ class SignupUserRequest extends StoreUserRequest
     }
 
     /**
-     * Get the rules() from StoreUserRequest!
+     * Inherits rules() from StoreUserRequest!
      */
 }

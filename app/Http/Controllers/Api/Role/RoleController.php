@@ -33,13 +33,11 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->can('index', Role::class)) {
-          $response = Role::paginate(Config::get('pagination.itemsPerPage'))
-                        ->appends('paged', $request->input('paged'));
-          return response($response)
-                    ->setStatusCode(200);
+            $response = Role::paginate(Config::get('pagination.itemsPerPage'))
+                            ->appends('paged', $request->input('paged'));
+            return response($response, 200);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+          return response(NULL, 401);
         }
     }
 
@@ -52,12 +50,10 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         if (Auth::user()->can('create', Role::class)) {
-          dispatch(new StoreRole($request->all()));
-          return response(null)
-                    ->setStatusCode(201);
+            dispatch(new StoreRole($request->all()));
+            return response(null, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -70,11 +66,9 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         if (Auth::user()->can('view', $role)) {
-          return response($role)
-                    ->setStatusCode(201);
+            return response($role, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -88,12 +82,10 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         if (Auth::user()->can('update', $role)){
-          dispatch(new UpdateRole($role, $request->all()));
-          return response(Role::find($role->id))
-                    ->setStatusCode(202);
+            dispatch(new UpdateRole($role, $request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -106,12 +98,10 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         if (Auth::user()->can('delete', $role)){
-          dispatch(new DestroyRole($role));
-          return response(null)
-                    ->setStatusCode(202);
+            dispatch(new DestroyRole($role));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -124,12 +114,10 @@ class RoleController extends Controller
     public function attachToUser(UserAttachRoleRequest $request)
     {
         if (Auth::user()->can('associate', Role::class)){
-          dispatch(new AttachRole(Auth::user(), $request->all()));
-          return response(null)
-                    ->setStatusCode(202);
+            dispatch(new AttachRole(Auth::user(), $request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 
@@ -142,12 +130,10 @@ class RoleController extends Controller
     public function detachFromUser(UserDetachRoleRequest $request)
     {
         if (Auth::user()->can('associate', Role::class)){
-          dispatch(new DetachRole(Auth::user(), $request->all()));
-          return response(null)
-                    ->setStatusCode(202);
+            dispatch(new DetachRole(Auth::user(), $request->all()));
+            return response(NULL, 202);
         } else {
-          return response(null)
-                    ->setStatusCode(403);
+            return response(NULL, 401);
         }
     }
 

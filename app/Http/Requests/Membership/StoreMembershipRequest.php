@@ -29,15 +29,7 @@ class StoreMembershipRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'user_id' => 'required|exists:users,id|unique:memberships,user_id',
-            'amount' => 'required|numeric|nullable',
-            'project' => 'sometimes|in:sbe,sbw,epd,none',
-            'start_at' => 'sometimes|date|nullable',
-            'end_at' => 'sometimes|date|nullable',
-            'end_reason' => 'sometimes|string|max:200|nullable',
-            'json' =>'sometimes|json|nullable',
-            'type' =>'sometimes|in:active,passive',
-        ];
+        $model = new Membership();
+        return $model->modelRules('store');
     }
 }

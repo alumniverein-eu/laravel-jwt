@@ -6,6 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    /**
+     * Returns models validation rules
+     *
+     * @param usage - determins the request type
+     */
+    public function modelRules($usage)
+    {
+        $rules = [
+            'store' => [
+                'name' => 'required|string|unique:roles|min:3|max:24',
+                'slug' => 'required|string|unique:roles|min:3|max:18',
+                'permissions' =>'json',
+            ],
+            'update' => [
+                'name' => 'string|unique:users,name,'.$this->id.',id',
+                'email' => 'email|unique:users,email,'.$this->id.',id',
+                'password' => 'string|min:6|max:10',
+            ]
+        ];
+        return $rules[$usage];
+    }
+
     protected $fillable = [
         'name', 'slug', 'permissions',
     ];

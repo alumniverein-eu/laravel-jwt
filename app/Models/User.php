@@ -10,6 +10,28 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * Returns models validation rules
+     *
+     * @param usage - determins the request type
+     */
+    public function modelRules($usage)
+    {
+        $rules = [
+            'store' => [
+                'name' => 'required|string|unique:users|min:3',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:6|max:10',
+            ],
+            'update' => [
+                'name' => 'string|unique:users,name,'.$this->id.',id',
+                'email' => 'email|unique:users,email,'.$this->id.',id',
+                'password' => 'string|min:6|max:10',
+            ]
+        ];
+        return $rules[$usage];
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

@@ -26,10 +26,6 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'string|unique:users,name,'.$this->user->id.',id',
-            'email' => 'email|unique:users,email,'.$this->user->id.',id',
-            'password' => 'string|min:6|max:10',
-        ];
+        return $this->user->modelRules('update');
     }
 }

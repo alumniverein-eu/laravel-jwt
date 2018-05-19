@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Http\Controllers\Api\AsyncValidation;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+use Config;
+
+class AsyncValidationController extends Controller
+{
+    /**
+      * Main validator function. Validates a single property.
+      *
+      * @var Request    $request
+      * @var String     $model
+      * @var String     $property
+      *
+      * @return response
+      */
+    public function validator($requestType, $model, $property, Request $request)
+    {
+        if(!$model_instance = $this->getModel($model, $request)){
+            $response = ['message' => '400 - Model '."$model".' not found!'];
+            return response($response, 400);
+        }
+
+        // Check if the type of request (store, update) exists on modelRules of the model
+        if(!$this->validateRequestType($requestType, $model_instance)){
+            $response = ['message' => '400 - Request '.$requestType.' not found on '.$model.'!'];
+            return response($response, 400);
+        }
+
+        // Check if the if protery exists on modelRules of the model
+        try {
+            $property_rules = $model_instance->modelRules($requestType)[$property];
+        } catch (\Exception $e) {
+            $response = ['message' => '400 - Rule for `'.$requestType.'` property `'.$property.'` not found on `'.$model.'` model!'];
+            return response($response, 400);
+        }
+
+        // Actually validate the property
+        $request->validate([
+            $property => $property_rules
+        ]);
+    }
+
+    /**
+      * Main validator function. Validates a single property.
+      *
+      * @var Request    $request
+      * @var String     $model
+      * @var String     $property
+      *
+      * @return response
+      */
+    public function singleValidator($requestType, $model, $property, Request $request)
+    {
+        if(!$model_instance = $this->getModel($model, $request)){
+            $response = ['message' => '400 - Model '."$model".' not found!'];
+            return response($response, 400);
+        }
+
+        // Check if the type of request (store, update) exists on modelRules of the model
+        if(!$this->validateRequestType($requestType, $model_instance)){
+            $response = ['message' => '400 - Request '.$requestType.' not found on '.$model.'!'];
+            return response($response, 400);
+        }
+
+        // Check if the if protery exists on modelRules of the model
+        try {
+            $property_rules = $model_instance->modelRules($requestType)[$property];
+        } catch (\Exception $e) {
+            $response = ['message' => '400 - Rule for `'.$requestType.'` property `'.$property.'` not found on `'.$model.'` model!'];
+            return response($response, 400);
+        }
+
+        // Actually validate the property
+        $request->validate([
+            $property => $property_rules
+        ]);
+    }
+
+    /**
+      * Multiple validator function.
+      *
+      * @var Request    $request
+      * @var String     $model
+      * @var String     $property
+      *
+      * @return response
+      */
+    public function multipleValidator($requestType, $model, $property[], Request $request)
+    {
+        if(!$model_instance = $this->getModel($model, $request)){
+            $response = ['message' => '400 - Model '."$model".' not found!'];
+            return response($response, 400);
+        }
+
+        // Check if the type of request (store, update) exists on modelRules of the model
+        if(!$this->validateRequestType($requestType, $model_instance)){
+            $response = ['message' => '400 - Request '.$requestType.' not found on '.$model.'!'];
+            return response($response, 400);
+        }
+
+        // Check if the if protery exists on modelRules of the model
+        try {
+            $property_rules = $model_instance->modelRules($requestType)[$property];
+        } catch (\Exception $e) {
+            $response = ['message' => '400 - Rule for `'.$requestType.'` property `'.$property.'` not found on `'.$model.'` model!'];
+            return response($response, 400);
+        }
+
+        // Actually validate the property
+        $request->validate([
+            $property => $property_rules
+        ]);
+    }
+
+    /**
+      * Maps request to model.
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    private function getModel($model, $request)
+    {
+        $modelMap = Config::get('modelmap'); // get the model specified as string out of the global modelmap!
+
+        if(!isset($modelMap[$model])){
+            // $response = ['message' => '400 - Model '."$model".' not found!'];
+            // return response($response, 400);
+            return NULL;
+        }
+
+        if($modelMap[$model]::find($request['model_id'])) { // is a model_id specified on the request which belongs to an existing model?
+            $model_instance = $modelMap[$model]::findOrFail($request['model_id']);
+        } else { // no model_id an therefore noch existing model given -> create a blank one!
+            $model_instance = new $modelMap[$model];
+        }
+        return $model_instance; // send back the generated model instance
+    }
+
+    /**
+      * Checks if set of rules exists.
+      *
+      * @var Request $request
+      *
+      * @return response
+      */
+    private function validateRequestType($requestType, $model_instance)
+    {
+        if($model_instance->modelRules($requestType)) return true;
+        return false;
+    }
+}
