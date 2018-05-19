@@ -26,14 +26,6 @@ class UpdateMembershipRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'amount' => 'required|numeric|nullable',
-            'project' => 'sometimes|in:sbe,sbw,epd,none',
-            'start_at' => 'sometimes|date|nullable',
-            'end_at' => 'sometimes|date|nullable',
-            'end_reason' => 'sometimes|string|max:200|nullable',
-            'json' =>'sometimes|json|nullable',
-            'type' =>'sometimes|in:active,passive',
-        ];
+        return return $this->membership->modelRules('store');;
     }
 }

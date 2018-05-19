@@ -26,10 +26,7 @@ class StoreRoleRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|string|unique:roles|min:3|max:24',
-            'slug' => 'required|string|unique:roles|min:3|max:18',
-            'permissions' =>'json',
-        ];
+        $model = new Role();
+        return $model->modelRules('store');
     }
 }

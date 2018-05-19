@@ -26,11 +26,6 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules()
     {
-        $role_id = $this->route()->parameter('role')->getKey();
-        return [
-            'name' => 'sometimes|string|min:3|max:24|unique:roles,name,' . $role_id . ',id',
-            'slug' => 'sometimes|string|min:3|max:18|unique:roles,slug,' . $role_id . ',id',
-            'permissions' => 'sometimes|json',
-        ];
+        return $this->role->modelRules('update');
     }
 }

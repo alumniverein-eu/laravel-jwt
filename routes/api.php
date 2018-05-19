@@ -42,5 +42,9 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 //routes without jwt
 Route::post('login',  'Api\Auth\AuthController@login');
 Route::post('signup', 'Api\Auth\AuthController@signup');
-Route::post('sgnp/checkname', 'Api\AsyncValidation\AsyncValidationController@checkName');
-Route::post('sgnp/checkmail', 'Api\AsyncValidation\AsyncValidationController@checkMail');
+Route::post('validate/checkname', 'Api\AsyncValidation\AsyncUserValidationController@checkName');
+Route::post('validate/checkmail', 'Api\AsyncValidation\AsyncUserValidationController@checkMail');
+
+// ansynchronous validation routes
+Route::post('validate/{requestType}/{property}/{model}/{id?}', 'Api\AsyncValidation\AsyncValidationController@singleValidator');
+Route::post('validatemultiple/{requestType}/{model}/{id?}', 'Api\AsyncValidation\AsyncValidationController@multipleValidator');
