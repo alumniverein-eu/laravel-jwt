@@ -19,13 +19,19 @@ class User extends Authenticatable
         $rules = [
             'store' => [
                 'name' => 'required|string|unique:users|min:3',
+                'firstname' => 'required|string|min:3',
+                'lastname' => 'required|string|min:3',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|string|min:6|max:10',
+                'profile_image' =>'sometimes|file|mimes:jpeg,jpg,bmp,png|nullable'
             ],
             'update' => [
                 'name' => 'string|unique:users,name,'.$this->id.',id',
+                'firstname' => 'string|min:3',
+                'lastname' => 'string|min:3',
                 'email' => 'email|unique:users,email,'.$this->id.',id',
                 'password' => 'string|min:6|max:10',
+                'profile_image' =>'sometimes|file|mimes:jpeg,jpg,bmp,png|nullable'
             ]
         ];
         return $rules[$usage];
@@ -37,7 +43,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'firstname', 'lastname'
     ];
 
     /**

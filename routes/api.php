@@ -26,6 +26,11 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 
   //user routes
   Route::resource('user', 'Api\User\UserController', ['except' => ['edit', 'create']]);
+  /*
+  Route::group(['prefix' => 'user'], function (){
+      Route::post('profileimage/update', 'Api\User\UserController@updateProfileImage');
+  });
+  */
 
   //role routes
   Route::resource('role', 'Api\Role\RoleController', ['except' => ['edit', 'create']]);

@@ -63,7 +63,7 @@ class AuthController extends Controller
     {
         if (!JWTAuth::getToken()) { //Logged in user cannot perform this action
             dispatch(new StoreUser($request->all()));
-            return response(NULL, 201);
+            return response(NULL, 202);
         } else {
             return response(NULL,403);
         }

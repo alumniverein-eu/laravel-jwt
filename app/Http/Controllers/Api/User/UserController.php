@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Config;
+use Image;
+use Hash;
+use File;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -69,10 +72,17 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(User $user, UpdateUserRequest $request)
     {
         if (Auth::user()->can('update', $user)){
-            dispatch(new UpdateUser($user, $request->all()));
+            dispatch(new UpdateUser($user, $request->except('profile_image')));
+
+            if($request->hasFile('profile_image')){
+                $this->storeProfileImage($user, $request->file('profile_image'));
+        	} elseif ($request->profile_image == null){
+                $this->removeProfileImage($user);
+            }
+
             return response(NULL, 202);
         } else {
             return response(NULL, 401);
@@ -93,5 +103,35 @@ class UserController extends Controller
         } else {
           return response(NULL, 401);
         }
+    }
+
+    private function storeProfileImage(User $user, $image){
+        $store_path = '/userfiles/user' . $user->id . '/';
+        $filename = 'p_' . base64_encode(Hash::make($user->id)) . '.png';
+        //$filename = 'profile_' . $user->id . '.' . $image->getClientOriginalExtension();
+        if($user->profile_image != NULL){
+            if( File::exists(public_path($store_path . $user->profile_image)) ){
+                // delete old image
+                $this->removeProfileImage($user);
+            }
+            // save new version
+            Image::make($image)->fit(300, 300)->encode('png', 100)->save( public_path($store_path . $filename) );
+        } else {
+            Image::make($image)->fit(300, 300)->encode('png', 100)->save( public_path($store_path . $filename) );
+        }
+
+        $user->profile_image = $filename;
+        $user->save();
+    }
+
+    private function removeProfileImage(User $user){
+        $store_path = '/userfiles/user' . $user->id . '/';
+        $filename = $user->profile_image;
+        if(File::exists( public_path($store_path . $filename) )){
+            // delete image
+            File::delete( public_path($store_path . $filename) );
+            return true;
+        }
+        return false;
     }
 }

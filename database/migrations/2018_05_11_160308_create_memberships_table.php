@@ -17,15 +17,15 @@ class CreateMembershipsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();
             $table->float('amount', 8, 2)->nullable();
-            $table->enum('project', ['sbe', 'sbw', 'epd', 'none'])->default('none');
+            $table->string('project')->default('none');
             $table->date('start_at')->nullable();
             $table->date('end_at')->nullable();
             $table->char('end_reason', 200)->nullable();
             $table->jsonb('json')->default('{}');
-            $table->enum('project', ['active', 'passive'])->default('active');
+            $table->string('state')->default('active');
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
