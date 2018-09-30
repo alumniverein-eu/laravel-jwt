@@ -23,15 +23,21 @@ class Membership extends Model
                 'end_reason' => 'sometimes|string|max:200|nullable',
                 'json' =>'sometimes|json|nullable',
                 'type' =>'sometimes|in:active,passive',
+                'street' => 'required|min:3',
+                'city' => 'required|min:3',
+                'postcode' => 'required|min:3',
             ],
             'update' => [
-                'amount' => 'required|numeric|nullable',
+                'amount' => 'sometimes|numeric|nullable',
                 'project' => 'sometimes|in:sbe,sbw,epd,none',
                 'start_at' => 'sometimes|date|nullable',
                 'end_at' => 'sometimes|date|nullable',
                 'end_reason' => 'sometimes|string|max:200|nullable',
                 'json' =>'sometimes|json|nullable',
                 'type' =>'sometimes|in:active,passive',
+                'street' => 'sometimes|min:3',
+                'city' => 'sometimes|min:3',
+                'postcode' => 'sometimes|min:3',
             ]
         ];
         return $rules[$usage];
@@ -39,10 +45,11 @@ class Membership extends Model
 
     protected $fillable = [
         'amount', 'project', 'start_at', 'end_at', 'end_reason',
+        'street', 'city', 'postcode', 'json'
     ];
 
     protected $casts = [
-        'permissions' => 'array',
+        'json' => 'array',
     ];
 
     public function user()

@@ -10,6 +10,7 @@ use JWTAuth;
 use Auth;
 
 use App\Jobs\User\StoreUser;
+use App\Http\Resources\User\UsersWithRelationsResource;
 
 class AuthController extends Controller
 {
@@ -26,7 +27,7 @@ class AuthController extends Controller
         if ( ! $token = JWTAuth::attempt($credentials)) {
             return response(['message'=>'Invalid Credentials'], 401);
         }
-        return response($token, 200);
+        return response(['data' => $token], 200);
     }
 
     /**
@@ -37,7 +38,7 @@ class AuthController extends Controller
     public function logout()
     {
         $response = JWTAuth::invalidate();
-        return response($response, 200);
+        return response(['data' => $response], 200);
     }
 
     /**
@@ -50,7 +51,7 @@ class AuthController extends Controller
         $token = JWTAuth::getToken();
         $newToken = JWTAuth::refresh($token);
 
-        return response($newToken, 200);
+        return response(['data' => $newToken], 200);
     }
 
     /**
@@ -63,9 +64,9 @@ class AuthController extends Controller
     {
         if (!JWTAuth::getToken()) { //Logged in user cannot perform this action
             dispatch(new StoreUser($request->all()));
-            return response(NULL, 202);
+            return response(['data' => ['data' => NULL]], 202);
         } else {
-            return response(NULL,403);
+            return response(['data' => NULL], 403);
         }
     }
 
@@ -78,7 +79,7 @@ class AuthController extends Controller
       */
     public function user(Request $request)
     {
-        $response = Auth::user();
+        $response = new UsersWithRelationsResource(Auth::user());
         return response($response, 200);
     }
 
@@ -92,9 +93,9 @@ class AuthController extends Controller
     public function check(Request $request)
     {
         if(Auth::user()){
-            return response(NULL, 200);
+            return response(['data' => true], 200);
         } else {
-            return response(NULL, 401);
+            return response(['data' => false], 401);
         }
 
     }

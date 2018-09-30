@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function membership()
     {
-        return $this->hasOne(Membership::class, 'user_id');
+        return $this->hasOne(Membership::class);
     }
 
     public function roles()

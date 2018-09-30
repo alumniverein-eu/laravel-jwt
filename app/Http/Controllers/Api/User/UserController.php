@@ -20,6 +20,8 @@ use App\Jobs\User\StoreUser;
 use App\Jobs\User\UpdateUser;
 use App\Jobs\User\DestroyUser;
 
+use App\Http\Resources\User\UsersWithRelationsResource;
+
 class UserController extends Controller
 {
     /**
@@ -30,8 +32,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->can('index', User::class)) {
-            $response = User::paginate(Config::get('pagination.itemsPerPage'))
-                                ->appends('paged', $request->input('paged'));
+            $response = User::paginate(Config::get('pagination.itemsPerPage'));
+            $response = UsersWithRelationsResource::collection($response)
+                        ->appends('paged', $request->input('paged'));
             return response($response, 200);
         } else {
             return response(NULL, 401);
@@ -62,7 +65,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response($user, 200);
+        //$user->load('membership');
+        //return response($user, 200);
+        $response = new UsersWithRelationsResource($user);
+        return response($response, 200);
     }
 
     /**

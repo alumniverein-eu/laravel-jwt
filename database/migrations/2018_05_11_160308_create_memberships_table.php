@@ -23,6 +23,11 @@ class CreateMembershipsTable extends Migration
             $table->char('end_reason', 200)->nullable();
             $table->jsonb('json')->default('{}');
             $table->string('state')->default('active');
+
+            $table->string('street');
+            $table->string('city');
+            $table->string('postcode');
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

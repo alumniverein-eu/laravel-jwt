@@ -26,6 +26,6 @@ class UpdateMembershipRequest extends FormRequest
      */
     public function rules()
     {
-        return return $this->membership->modelRules('store');;
+        return $this->membership->modelRules('update');
     }
 }
